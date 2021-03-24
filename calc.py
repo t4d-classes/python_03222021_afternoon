@@ -1,11 +1,11 @@
 from functools import reduce
 
 calc_ops = [
-    (1, "Add", "add", lambda x, y: x + y),
-    (2, "Subtract", "subtract", lambda x, y: x - y),
-    (3, "Multiply", "multiply", lambda x, y: x * y),
-    (4, "Divide", "divide", lambda x, y: x / y),
-    (5, "Exponent", "exponent", lambda x, y: x ** y),
+    {"id": 1, "label": "Add", "cmd": "add", "fn": lambda x, y: x + y},
+    {"id": 2, "label": "Subtract", "cmd": "subtract", "fn": lambda x, y: x - y},
+    {"id": 3, "label": "Multiply", "cmd": "multiply", "fn": lambda x, y: x * y},
+    {"id": 4, "label": "Divide", "cmd": "divide", "fn": lambda x, y: x / y},
+    {"id": 5, "label": "Exponent", "cmd": "exponent", "fn": lambda x, y: x ** y},
 ]
 
 history = []
@@ -32,11 +32,11 @@ def get_history_entry_id():
 
 
 def next_entry_id(history_list):
-    return max([entry[0] for entry in history_list] or [0]) + 1
+    return max([entry["id"] for entry in history_list] or [0]) + 1
 
 
 def create_history_entry(entry_id, op_name, op_value):
-    return (entry_id, op_name, op_value)
+    return {"id": entry_id, "op_name": op_name, "op_value": op_value}
 
 
 def append_history_entry(history_list, op_name, op_value):
@@ -49,14 +49,14 @@ def append_history_entry(history_list, op_name, op_value):
 
 def get_calc_op_by_cmd(calc_ops_list, cmd):
     for calc_op in calc_ops_list:
-        if calc_op[2] == cmd:
+        if calc_op["cmd"] == cmd:
             return calc_op
 
 
 def perform_calc_op(result, entry):
-    calc_op = get_calc_op_by_cmd(calc_ops, entry[1])
-    calc_op_fn = calc_op[3]
-    return calc_op_fn(result, entry[2])
+    calc_op = get_calc_op_by_cmd(calc_ops, entry["op_name"])
+    calc_op_fn = calc_op["fn"]
+    return calc_op_fn(result, entry["op_value"])
 
 
 def calc_result(history_list, calc_ops_list):
@@ -84,8 +84,8 @@ def display_operation_counts(history_list):
 
     for calc_op in calc_ops:
         op_counts.append(
-            (calc_op[1], len([entry for entry in history_list
-                              if entry[1] == calc_op[2]])))
+            (calc_op["label"], len([entry for entry in history_list
+                                    if entry["op_name"] == calc_op["cmd"]])))
 
     print("Op Counts")
     print("---------")
@@ -103,14 +103,14 @@ def display_history(history_list):
     print("-------------------------")
     for history_entry in history_list:
         print(" | ".join([
-            str(history_entry[0]).rjust(3),
-            history_entry[1].ljust(7),
-            str(history_entry[2]).rjust(8)]))
+            str(history_entry["id"]).rjust(3),
+            history_entry["op_name"].ljust(7),
+            str(history_entry["op_value"]).rjust(8)]))
 
 
 def remove_history_entry(history_list, entry_id):
     for entry in history_list:
-        if entry[0] == entry_id:
+        if entry["id"] == entry_id:
             history_list.remove(entry)
             break
 
