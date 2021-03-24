@@ -53,14 +53,22 @@ def get_calc_op_by_cmd(calc_ops_list, cmd):
             return calc_op
 
 
-def calc_result(history_list, calc_ops_list):
-    result = 0
-    for entry in history_list:
-        calc_op = get_calc_op_by_cmd(calc_ops_list, entry[1])
-        calc_op_fn = calc_op[3]
-        result = calc_op_fn(result, entry[2])
+def perform_calc_op(result, entry):
+    calc_op = get_calc_op_by_cmd(calc_ops, entry[1])
+    calc_op_fn = calc_op[3]
+    return calc_op_fn(result, entry[2])
 
-    return result
+
+def calc_result(history_list, calc_ops_list):
+    return reduce(perform_calc_op, history_list, 0)
+
+    # result = 0
+    # for entry in history_list:
+    #     calc_op = get_calc_op_by_cmd(calc_ops_list, entry[1])
+    #     calc_op_fn = calc_op[3]
+    #     result = calc_op_fn(result, entry[2])
+
+    # return result
 
 # def op_counts_str(accumulator, current):
 
@@ -85,7 +93,7 @@ def display_operation_counts(history_list):
     #     print(f"{oplabel}: {opcount}")
 
     print(
-       " ".join([f"{oplabel}: {opcount}" for oplabel, opcount in op_counts]))
+        " ".join([f"{oplabel}: {opcount}" for oplabel, opcount in op_counts]))
 
     # print(reduce(op_counts_str, op_counts, ""))
 
