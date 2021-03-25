@@ -1,0 +1,7 @@
+blue
+green
+gray
+white
+black
+purple
+mint
