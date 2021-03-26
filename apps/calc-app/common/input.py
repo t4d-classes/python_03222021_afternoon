@@ -1,4 +1,3 @@
-
 def input_int(prompt):
     return int(input(prompt))
 
